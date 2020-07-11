@@ -63,7 +63,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       //mengirim data ke web services
       //karena menggunakan class future, maka wajib mengembalikan nilai
       final http.Response response = await http
-          .post("http://192.168.43.178/apiflutter/api/Penjualan/save", body: {
+          .post("http://192.168.43.178/apiflutter/api/penjualan/save", body: {
         //isian data dikirim dalam body
         //key disesuaiakn dengan parameter $_POST dalam web services
         //value diambil dari text dalam controller
@@ -76,7 +76,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       return response;
     } else {
       final http.Response response = await http.post(
-          "http://192.168.43.178/apiflutter/api/Penjualan/save_update",
+          "http://192.168.43.178/apiflutter/api/penjualan/save_update",
           body: {
             'id': widget.list['id'],
             'nama': namaController.text,

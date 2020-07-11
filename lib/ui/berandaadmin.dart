@@ -12,24 +12,17 @@ class Berandaadmin extends StatefulWidget {
 }
 
 class BerandaadminState extends State<Berandaadmin> {
-  List penjualanList;
-  int count = 0;
-  Future<List> getData() async {
-    final response =
-        await http.get("http://192.168.43.178/apiflutter/api/Penjualan");
-    return json.decode(response.body);
-  }
-
-  @override
-  void initState() {
-    Future<List> penjualanListFuture = getData();
-    penjualanListFuture.then((penjualanList) {
-      setState(() {
-        this.penjualanList = penjualanList;
-        this.count = penjualanList.length;
-      });
+  String id, nama, email, photo;
+  int level = 0;
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      level = preferences.getInt("level");
+      id = preferences.getString("id");
+      nama = preferences.getString("nama");
+      email = preferences.getString("email");
+      photo = preferences.getString("photo");
     });
-    super.initState();
   }
 
   signOut() async {
@@ -40,21 +33,73 @@ class BerandaadminState extends State<Berandaadmin> {
     Navigator.pushNamed(context, '/login');
   }
 
+  List penjualanList;
+  //untuk menampung jumlah data
+  int count = 0;
+  Future<List> getData() async {
+    //request data penjualan
+    //sesuaikan dengan ip address, pastikan webserver aktif, dan fungsi sesuai dengan studi kasus
+    final response =
+        await http.get("http://192.168.43.178/apiflutter/api/Penjualansepeda");
+    return json.decode(response.body);
+  } //memanggil fungsi future pertama kali
+
   @override
+  void initState() {
+    Future<List> penjualanListFuture = getData();
+    penjualanListFuture.then((penjualanList) {
+      setState(() {
+        //menampung futre data dalam list penjualan yang telah dibentuk sebelumnya
+        this.penjualanList = penjualanList;
+        this.count = penjualanList.length;
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  //membuat widget body
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        title:
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-          Text('Admin'),
-        ]),
+        title: Text("Penjualan Sepeda"),
       ),
       drawer: new Drawer(
         child: new ListView(
           children: <Widget>[
+            new UserAccountsDrawerHeader(
+              accountName: new Text("ArBike"),
+              accountEmail: new Text("Arkasone20@gmail.com"),
+              currentAccountPicture: new GestureDetector(
+                onTap: () {},
+                child: new CircleAvatar(
+                  backgroundImage: new AssetImage('assets/profil.jpg'),
+                ),
+              ),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('assets/bg_profile.jpg'),
+                    fit: BoxFit.cover),
+              ),
+            ),
             new ListTile(
-              title: new Text('logout'),
-              trailing: new Icon(Icons.settings),
+              title: new Text('Notifications'),
+              trailing: new Icon(Icons.notifications_none),
+            ),
+            new ListTile(
+              title: new Text('Wishlist'),
+              trailing: new Icon(Icons.bookmark_border),
+            ),
+            new ListTile(
+              title: new Text('Akun'),
+              trailing: new Icon(Icons.verified_user),
+            ),
+            Divider(
+              height: 2,
+            ),
+            new ListTile(
+              title: new Text('Logout'),
+              trailing: new Icon(Icons.exit_to_app),
               onTap: () {
                 signOut();
               },
@@ -62,6 +107,8 @@ class BerandaadminState extends State<Berandaadmin> {
           ],
         ),
       ),
+      //menampilkan data dalam fungsi createListView
+      //sama seperti pada modul 2
       body: createListView(),
       //tombol add
       floatingActionButton: FloatingActionButton(
@@ -74,48 +121,41 @@ class BerandaadminState extends State<Berandaadmin> {
                     index: null,
                   )))),
     );
-  }
+  } //sebuah fungsi untuk menampilkan data dalam listview
 
   ListView createListView() {
     TextStyle textStyle = Theme.of(context).textTheme.subhead;
+    //updateListView();
     return ListView.builder(
       itemCount: count,
       itemBuilder: (BuildContext context, int index) {
         return Card(
           color: Colors.white,
           elevation: 2.0,
+          //anggota list
           child: ListTile(
-              title: Text(
-                penjualanList[index]['nama'],
-                style: textStyle,
-              ),
-              subtitle: Row(
-                children: <Widget>[
-                  Text(penjualanList[index]['tanggal'].toString().toString()),
-                  Text(
-                    " | " + penjualanList[index]['jumlah'],
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    " | " + penjualanList[index]['jenis_velg'],
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              //icon delete
-              trailing: GestureDetector(
-                child: Icon(Icons.delete),
-                onTap: () => confirm(
-                    penjualanList[index]['id'], penjualanList[index]['nama']),
-              ),
-              //klik list untuk tampilkan form update
-              onTap: () =>
-                  Navigator.of(context).pushReplacement(new MaterialPageRoute(
-                      //mengirim list penjualan dan index
-                      builder: (BuildContext context) => new InputPenjualan(
-                            list: penjualanList[index],
-                            index: index,
-                          )))),
+            title: Text(
+              penjualanList[index]['nama'],
+              style: textStyle,
+            ),
+            subtitle: Row(
+              children: <Widget>[
+                Text(penjualanList[index]['tanggal'].toString().toString()),
+                Text(
+                  " | Rp. " + penjualanList[index]['jumlah'],
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            //icon delete
+            trailing: GestureDetector(
+              child: Icon(Icons.delete),
+              onTap: () => confirm(
+                  penjualanList[index]['id'], penjualanList[index]['nama']),
+            ),
+            //klik list untuk tampilkan form update
+            onTap: () {},
+          ),
         );
       },
     );
@@ -123,13 +163,13 @@ class BerandaadminState extends State<Berandaadmin> {
 
   Future<http.Response> deletePenjualan(id) async {
     final http.Response response = await http
-        .delete('http://192.168.43.178/apiflutter/api/Penjualan/delete/$id');
+        .delete('http://192.168.43.178/api/Penjualansepeda/delete/$id');
     return response;
   }
 
   void confirm(id, nama) {
     AlertDialog alertDialog = new AlertDialog(
-      content: new Text("Anda yakin menghapus penjualan '$nama'"),
+      content: new Text("Anda yakin hapus penjualan '$nama'"),
       actions: <Widget>[
         new RaisedButton(
           child: new Text(

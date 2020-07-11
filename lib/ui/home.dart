@@ -14,7 +14,7 @@ class _HomeState extends State<Home> {
   int count = 0;
   Future<List> getData() async {
     final response =
-        await http.get("http://192.168.43.178/apiflutter/api/Penjualansepeda");
+        await http.get("http://192.168.43.178/apiflutter/api/penjualan/index");
     return json.decode(response.body);
   }
 

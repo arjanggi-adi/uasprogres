@@ -4,6 +4,7 @@ import 'package:uas100/ui/login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uas100/ui/home.dart';
+import 'package:uas100/ui/produklist.dart';
 
 class Berandauser extends StatefulWidget {
   @override
@@ -75,8 +76,7 @@ class _BerandauserState extends State<Berandauser> {
                   currentAccountPicture: new GestureDetector(
                     onTap: () {},
                     child: new CircleAvatar(
-                      backgroundImage: new NetworkImage(
-                          'http://192.168.100.178/apiflutter/media/photo/$photo'),
+                      backgroundImage: new AssetImage('assets/profil.jpg'),
                     ),
                   ),
                   decoration: BoxDecoration(
@@ -87,7 +87,7 @@ class _BerandauserState extends State<Berandauser> {
                 ),
                 new ListTile(
                   title: new Text('logout'),
-                  trailing: new Icon(Icons.power),
+                  trailing: new Icon(Icons.exit_to_app),
                   onTap: () {
                     signOut();
                   },
@@ -99,7 +99,7 @@ class _BerandauserState extends State<Berandauser> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Image.asset("assets/appimages/Polygon.jpg"),
+                Image.asset("assets/cover.jpg"),
                 Container(
                   padding: EdgeInsets.all(8.0),
                   decoration: new BoxDecoration(
@@ -113,24 +113,30 @@ class _BerandauserState extends State<Berandauser> {
                     ),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      new Text(
-                        "April",
-                        style: new TextStyle(
-                            fontSize: 18.0,
-                            color: Colors.white,
-                            fontFamily: "NeoSansBold"),
-                      ),
-                      new Container(
-                        child: new Text(
-                          "Rp. 62.000.000",
-                          style: new TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.white,
-                              fontFamily: "NeoSansBold"),
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Rp 42.000.000 ',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                            Text(
+                              'COLLOSUS DH8',
+                              style: TextStyle(
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
                         ),
-                      )
+                      ),
+                      Icon(
+                        Icons.local_offer,
+                        color: Colors.red[500],
+                      ),
+                      Text(' Discount Up 10%'),
                     ],
                   ),
                 ),
@@ -146,10 +152,9 @@ class _BerandauserState extends State<Berandauser> {
                           padding: EdgeInsets.all(10),
                           child: new Column(
                             children: <Widget>[
-                              new Image.asset('assets/appimages/plus.png',
-                                  width: 40),
+                              new Image.asset('assets/tambah.png', width: 40),
                               new Text(
-                                "Tambah",
+                                "",
                                 style: new TextStyle(
                                     fontSize: 10, color: Colors.red),
                               )
@@ -176,10 +181,10 @@ class _BerandauserState extends State<Berandauser> {
                           padding: EdgeInsets.all(10),
                           child: new Column(
                             children: <Widget>[
-                              new Image.asset('assets/appimages/cart.png',
+                              new Image.asset('assets/keranjang.png',
                                   width: 40),
                               new Text(
-                                "Penjualan",
+                                "",
                                 style: new TextStyle(
                                     fontSize: 10, color: Colors.red),
                               )
@@ -201,17 +206,19 @@ class _BerandauserState extends State<Berandauser> {
                           padding: EdgeInsets.all(10),
                           child: new Column(
                             children: <Widget>[
-                              new Image.asset('assets/appimages/icon_user.png',
-                                  width: 40),
+                              new Image.asset('assets/sepeda.png', width: 40),
                               new Text(
-                                "Pelanggan",
+                                "",
                                 style: new TextStyle(
                                     fontSize: 10, color: Colors.red),
                               )
                             ],
                           ),
                           onPressed: () {
-//hitung('/');
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  new ProdukList(),
+                            ));
                           },
                         ),
                       ),
@@ -223,10 +230,9 @@ class _BerandauserState extends State<Berandauser> {
                           padding: EdgeInsets.all(10),
                           child: new Column(
                             children: <Widget>[
-                              new Image.asset('assets/appimages/register.png',
-                                  width: 40),
+                              new Image.asset('assets/laporan.png', width: 40),
                               new Text(
-                                "Laporan",
+                                "",
                                 style: new TextStyle(
                                     fontSize: 10, color: Colors.red),
                               )
